@@ -1,5 +1,6 @@
 package _00_Intro_To_String_Methods;
 
+import java.util.ArrayList;
 import java.util.Base64;
 
 /*
@@ -55,14 +56,16 @@ public class _01_StringMethods {
     // assume there is only one space between the first and last name
     public static String lineLeader(String s1, String s2, String s3) {
     	char[] l1 = new char[3];
-    	char one;
-    	char two;
-    	char three;
+    	char one = ' ';
+    	char two = ' ';
+    	char three = ' ';
     	int a1 = 0;
     	int a2 = 0;
     	int a3 = 0;
     	int c = 0;
     	String r = "";
+    	String f = "";
+    	boolean can = false;
     	for (int i = 0; i < s1.length(); i++) {
         	if (!(s1.charAt(i) == ' ')) {
         		l1[0] = s1.charAt(i);
@@ -123,13 +126,24 @@ public class _01_StringMethods {
     		}
     		r = s3.substring(a3, c);
     	}
-    	return r;
+    	return f;
     }
 
     // Return the sum of all numerical digits in the String
     public static int numeralSum(String s) {
-        int st = Integer.parseInt(s);
-        return st;
+    	ArrayList<Character> num = new ArrayList<Character>();
+    	for (int i = 0; i < s.length(); i++) {
+    		char bob = s.charAt(i);
+    		if (bob == '1' || bob == '2' || bob == '3' || bob == '4' || bob == '5' || bob == '6' || bob == '7' || bob == '8' || bob == '9') {
+    			num.add(bob);
+    		}
+    	}
+    	int r = 0;
+    	for (int i = 0; i < num.size(); i++) {
+    		r = r + Character.getNumericValue(num.get(i));
+    	}
+    	
+    	return r;
     }
 
     // Return the number of times String substring appears in String s
@@ -147,33 +161,66 @@ public class _01_StringMethods {
 
     // Call Utilities.encrypt at the bottom of this file to encrypt String s
     public static String encrypt(String s, char key) {
-        return encrypt(s, key);
+        encrypt(s, key);
+        return s;
     }
 
     // Call Utilities.decrypt at the bottom of this file to decrypt the
     // cyphertext (encrypted text)
     public static String decrypt(String s, char key) {
-        return decrypt(s, key);
+        decrypt(s, key);
+        return s;
     }
 
     // Return the number of words in String s that end with String substring
     // You can assume there are no punctuation marks between words
     public static int wordsEndsWithSubstring(String s, String substring) {
-        return 0;
+        int length = substring.length();
+        for (int i = 0; i < s.length(); i++) {
+        	
+        }
+    	return 0;
     }
 
     // Given String s, return the number of characters between the first
     // occurrence of String substring and the final occurrence
     // You can assume that substring will appear at least twice
     public static int distance(String s, String substring) {
-        return 0;
+        boolean firstFound = false;
+        int first = 0;
+        int last = 0;
+        int length = 0;
+        int past = 0;
+        int substringLength = substring.length();
+        for (int i = 0; i < s.length(); i++) {
+        	String findFirst = s.substring(0, i);
+        	if (findFirst.contains(substring) && !firstFound) {
+        		first = i;
+        		past = first;
+        		firstFound = true;
+        	}
+        	String find = s.substring(past, i);
+        	if (find.contains(substring)) {
+        		past = i;
+        		last = i - substringLength;
+        	}
+        }
+        length = last - first;
+    	return length;
     }
 
     // Return true if String s is a palindrome
     // palindromes are words or phrases are read the same forward as backward.
     // HINT: ignore/remove all punctuation and spaces in the String
     public static boolean palindrome(String s) {
-        return true;
+        String backward = s;
+        int b = 0;
+        char bob = s.charAt(b);
+        for (int i = s.length(); i > 0; i--) {
+        	b++;
+        	bob = s.charAt(b);
+        }
+    	return true;
     }
 }
 
