@@ -55,78 +55,25 @@ public class _01_StringMethods {
     // You cannot assume there are no extra spaces around the name, but you can
     // assume there is only one space between the first and last name
     public static String lineLeader(String s1, String s2, String s3) {
-    	char[] l1 = new char[3];
-    	char one = ' ';
-    	char two = ' ';
-    	char three = ' ';
-    	int a1 = 0;
-    	int a2 = 0;
-    	int a3 = 0;
-    	int c = 0;
-    	String r = "";
-    	String f = "";
-    	boolean can = false;
-    	for (int i = 0; i < s1.length(); i++) {
-        	if (!(s1.charAt(i) == ' ')) {
-        		l1[0] = s1.charAt(i);
-        		one = l1[0];
-        		a1 = i;
-        		break;
-        	}
-        }
-    	for (int i = 0; i < s2.length(); i++) {
-        	if (!(s2.charAt(i) == ' ')) {
-        		l1[1] = s2.charAt(i);
-        		two = l1[1];
-        		a2 = i;
-        		break;
-        	}
-        }
-    	for (int i = 0; i < s3.length(); i++) {
-    		if (!(s3.charAt(i) == ' ')) {
-        		l1[2] = s3.charAt(i);
-        		three = l1[2];
-        		a3 = i;
-        		break;
-        	}
-		}
-    	for (int i = 0; i < l1.length; i++) {
-    		for (int k = 0; k < l1.length - 1; k++) {
-    			if (l1[k+1] > l1[k]) {
-    				char t = l1[k];
-    				l1[k] = l1[k+1];
-    				l1[k+1] = t;
-    			}
-    		}
-    	}
-    	if(l1[0] == one) {
-    		for (int i = a1; i < s1.length(); i++) {
-    			if (s1.charAt(i) == ' ') {
-    				c = i;
-    				break;
-    			}
-    		}
-    		r = s1.substring(a1, c);
-    	}
-    	else if (l1[1] == two) {
-    		for (int i = a2; i < s2.length(); i++) {
-    			if (s2.charAt(i) == ' ') {
-    				c = i;
-    				break;
-    			}
-    		}
-    		r = s2.substring(a2, c);
+    	s1 = s1.trim();
+    	s2 = s2.trim();
+    	s3 = s3.trim();
+    	String[] s1A = s1.split(" ");
+    	String[] s2A = s2.split(" ");
+    	String[] s3A = s3.split(" ");
+    	String[] greatest;
+    	String toReturn;
+    	if (s1A[1].compareTo(s2A[1]) < 0) {
+    		greatest = s1A;
     	}
     	else {
-    		for (int i = a3; i < s3.length(); i++) {
-    			if (s3.charAt(i) == ' ') {
-    				c = i;
-    				break;
-    			}
-    		}
-    		r = s3.substring(a3, c);
+    		greatest = s2A;
     	}
-    	return f;
+    	if (s3A[1].compareTo(greatest[1]) < 0) {
+    		greatest = s3A;
+    	}
+    	toReturn = greatest[0] + " " + greatest[1];
+    	return toReturn;
     }
 
     // Return the sum of all numerical digits in the String
@@ -161,14 +108,14 @@ public class _01_StringMethods {
 
     // Call Utilities.encrypt at the bottom of this file to encrypt String s
     public static String encrypt(String s, char key) {
-        encrypt(s, key);
+        s = Utilities.encrypt(s.getBytes(), (byte)key);
         return s;
     }
 
     // Call Utilities.decrypt at the bottom of this file to decrypt the
     // cyphertext (encrypted text)
     public static String decrypt(String s, char key) {
-        decrypt(s, key);
+        s = Utilities.decrypt(s, (byte)key);
         return s;
     }
 
@@ -176,8 +123,20 @@ public class _01_StringMethods {
     // You can assume there are no punctuation marks between words
     public static int wordsEndsWithSubstring(String s, String substring) {
         int length = substring.length();
+        s.trim();
+        int subCount = 0;
+        String tempSub;
+        ArrayList<Integer> spaces = new ArrayList<Integer>();
         for (int i = 0; i < s.length(); i++) {
-        	
+        	if(s.charAt(i) == ' ') {
+        		spaces.add(i);
+        	}
+        }
+        for (int i = 0; i < spaces.size(); i++) {
+        	tempSub = s.substring(spaces.get(i) - length, i);
+        	if (tempSub.equals(substring)) {
+        		length++;
+        	}
         }
     	return 0;
     }
@@ -186,41 +145,37 @@ public class _01_StringMethods {
     // occurrence of String substring and the final occurrence
     // You can assume that substring will appear at least twice
     public static int distance(String s, String substring) {
-        boolean firstFound = false;
-        int first = 0;
-        int last = 0;
-        int length = 0;
-        int past = 0;
-        int substringLength = substring.length();
-        for (int i = 0; i < s.length(); i++) {
-        	String findFirst = s.substring(0, i);
-        	if (findFirst.contains(substring) && !firstFound) {
-        		first = i;
-        		past = first;
-        		firstFound = true;
-        	}
-        	String find = s.substring(past, i);
-        	if (find.contains(substring)) {
-        		past = i;
-        		last = i - substringLength;
-        	}
-        }
-        length = last - first;
-    	return length;
+    	int substringLength = substring.length();
+    	int first = s.indexOf(substring) + substringLength;
+    	int last = s.lastIndexOf(substring);
+    	return last - first;
     }
 
     // Return true if String s is a palindrome
     // palindromes are words or phrases are read the same forward as backward.
     // HINT: ignore/remove all punctuation and spaces in the String
     public static boolean palindrome(String s) {
-        String backward = s;
-        int b = 0;
-        char bob = s.charAt(b);
-        for (int i = s.length(); i > 0; i--) {
+        int b = -1;
+        char back;
+        char bob;
+        boolean pal = true;
+        s = s.trim();
+        String[] pun = new String[]{"!", "?", ":", " ", ";", ".", ",", "-", "_"};
+        for (int i = 0; i < pun.length; i++) {
+        	s = s.replace(pun[i], "");
+        }
+        System.out.println(s);
+        for (int i = s.length() - 1; i > -1; i--) {
         	b++;
         	bob = s.charAt(b);
+        	back = s.charAt(i);
+        	bob = Character.toLowerCase(bob);
+        	back = Character.toLowerCase(back);
+        	if (bob != back) {
+        		pal = false;
+        	}
         }
-    	return true;
+    	return pal;
     }
 }
 
