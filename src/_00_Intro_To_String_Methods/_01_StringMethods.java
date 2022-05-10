@@ -124,6 +124,7 @@ public class _01_StringMethods {
     public static int wordsEndsWithSubstring(String s, String substring) {
         int length = substring.length();
         s.trim();
+        int amount = 0;
         int subCount = 0;
         String tempSub;
         ArrayList<Integer> spaces = new ArrayList<Integer>();
@@ -133,12 +134,14 @@ public class _01_StringMethods {
         	}
         }
         for (int i = 0; i < spaces.size(); i++) {
-        	tempSub = s.substring(spaces.get(i) - length, i);
-        	if (tempSub.equals(substring)) {
-        		length++;
+        	if (spaces.get(i) - length >= 0) {
+        		tempSub = s.substring(spaces.get(i) - length, spaces.get(i));
+        		if (tempSub.equals(substring)) {
+        			amount++;
+        		}	
         	}
         }
-    	return 0;
+    	return amount;
     }
 
     // Given String s, return the number of characters between the first
